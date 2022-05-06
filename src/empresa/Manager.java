@@ -137,7 +137,8 @@ public class Manager
 		if(con != null) 
 		{
 			try(Statement st = con.createStatement()){
-				st.execute("DELETE FROM departamentos WHERE dept_no = "+deptno);
+				st.execute("DELETE FROM departamentos "
+						+ "WHERE dept_no = "+deptno);
 				JOptionPane.showMessageDialog(null, "Departamento "+deptno+" eliminado");
 			}catch(SQLException sqle) {
 				sqle.printStackTrace();
@@ -151,30 +152,87 @@ public class Manager
 	{
 		if(con != null) 
 		{
-			System.out.println();
+			try(Statement st = con.createStatement())
+			{
+				st.execute("UPDATE departamentos "
+						+ "SET loc = '"+loc+"' "
+						+ "WHERE dept_no = "+deptno);
+				
+				JOptionPane.showMessageDialog(null, "Localizacion actualizada");
+				
+			}catch(SQLException sqle) {
+				sqle.printStackTrace();
+			}catch(Exception e) {e.printStackTrace();}
+			
 		}else 
 			reconexion(con);
 	}
 
-	public static void actulzDepto(Connection con, Departamento depto)
+	public static void actulzDepto(Connection con, Departamento depto, String loc)
 	{
+		String lugar;
+		
 		if(con != null) {
+			try(Statement st = con.createStatement())
+			{
+				lugar = depto.getLoc();
+				
+				st.execute("UPDATE departamentos "
+						+ "SET loc = '"+loc+"' "
+						+ "WHERE dept_no = "+depto.getDeptno());
+				
+				depto.setLoc(loc);
+				JOptionPane.showMessageDialog(null, "La localización "+lugar+" del departamento "+depto.getDeptno()
+												+" ha sido actualizado a "+depto.getLoc());
+				
+			}catch(SQLException sqle) {
+				sqle.printStackTrace();
+			}catch(Exception e) {e.printStackTrace();}
 			
 		}else 
 			reconexion(con);
 	}
 	
-	public static void devolverDepto(Connection con, int deptno)
+	public static Departamento devolverDepto(Connection con, int deptno)
 	{
-		if(con != null) {
+		String name = new String();
+		String loc = new String();
+		if(con != null) 
+		{
+			try
+			{
+				Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+				ResultSet rs = st.executeQuery("SELECT * FROM departamentos "
+												+ "WHERE dept_no = "+deptno);
+				name = rs.getString(2);
+				loc = rs.getString(3);
+					
+			}catch(SQLException sqle) {
+				sqle.printStackTrace();
+			}catch(Exception e) {e.printStackTrace();}
 			
 		}else 
 			reconexion(con);
+		
+		return new Departamento(deptno, name, loc);
+		
 	}
 	
-	public static void subirSalario(Connection con, int sal, int deptno)
+	public static void subirSalario(Connection con, double sal, int deptno)
 	{
-		if(con != null) {
+		if(con != null) 
+		{
+			try(Statement st = con.createStatement())
+			{
+				st.execute("UPDATE empleados "
+						+ "SET salario = salario + "+sal
+						+ " WHERE dept_no = "+deptno);
+				
+				JOptionPane.showMessageDialog(null, "Salario aumentado");
+				
+			}catch(SQLException sqle) {
+				sqle.printStackTrace();
+			}catch(Exception e) {e.printStackTrace();}
 			
 		}else 
 			reconexion(con);

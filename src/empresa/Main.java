@@ -16,6 +16,7 @@ public class Main
 	static void menu()
 	{
 		int deptno;
+		double sal;
 		String name,loc;
 		String ldept = "Lista de Departamentos\n";
 		boolean run = true;
@@ -23,11 +24,12 @@ public class Main
 		ArrayList<Departamento> deptos;
 		
 		int option = Integer.parseInt(JOptionPane.showInputDialog("Introduce una opción:"
-				+ "1.-Conectar base de datos."
-				+ "2.-Insertar un departamento."
-				+ "3.-Listar departamentos"
-				+ "4.-Eliminar un Departamento."
-				+ "5.-"));
+				+ "\n1.-Conectar base de datos."
+				+ "\n2.-Insertar un departamento."
+				+ "\n3.-Listar departamentos"
+				+ "\n4.-Eliminar un Departamento."
+				+ "\n5.-Actualizar la localización de un departamento"
+				+ "\n6.-Subir el salario a un departamento"));
 		
 		while(run) 
 		{
@@ -70,10 +72,11 @@ public class Main
 					Manager.actulzDepto(con, deptno, loc);
 					break;
 				case 6:
-					break;
-				case 7:
-					break;
-				case 8:
+					deptno = Integer.parseInt(JOptionPane.showInputDialog("Introdcue el número de departamento "
+							+ "al que quieras subir el sueldo"));
+					sal = Double.parseDouble(JOptionPane.showInputDialog("Introduce la cantidad que quieres aumentar"));
+					
+					Manager.subirSalario(con, sal, deptno);
 					break;
 				case 9:
 					//InfoDB();
